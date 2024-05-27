@@ -7,11 +7,14 @@ import os
 PWD = os.getcwd()
 INPUT_PATH = "/mnt/shared/nationwide/cell_type_datasets"
 
-rule all:
+rule seurat:
 	input:
 		f"{INPUT_PATH}/immune.rds"
 	output:
-		f"{PWD}/plots/umap_plot.png"
+		f"{PWD}/results/seurat_integration.h5Seurat",
+		f"{PWD}/results/seurat_report.png",
+		f"{PWD}/results/cca_umap_plot.png",
+		f"{PWD}/results/rpca_umap_plot.png"
 	container:
 		"seurat/container:latest"
 	shell:
@@ -19,5 +22,8 @@ rule all:
 		"--user $(id -u):$(id -g) "
 		f"-v {INPUT_PATH}/immune.rds:/data/immune.rds "
 		f"-v {PWD}/scripts:/scripts "
-		f"-v {PWD}/plots:/plots seurat/container:latest "
-		"/scripts/r_scripts/sctransform_rpca.R" 
+		f"-v {PWD}/results:/results seurat/container:latest "
+		"/scripts/r_scripts/scelect_seurat.R "
+		f"/data/immune.rds " 
+		f"/results "
+		"development_stage"
