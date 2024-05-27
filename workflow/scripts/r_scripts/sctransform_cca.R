@@ -4,10 +4,16 @@ library(remotes)
 library(sctransform)
 library(glmGamPoi)
 library(ggplot2)
+library(cluster)
 
-path <- "/data/immune.rds"
-data <- readRDS(path)
-data <- SplitObject(data, split.by = "development_stage")
+args <- commandArgs(trailingOnly = TRUE)
+
+input_path <- args[[1]]
+output_path <- args[[2]]
+dataset_key <- args[[3]]
+
+data <- readRDS(input_path)
+data <- SplitObject(data, split.by = dataset_key)
 
 data <- list(data$`31-year-old human stage`,
              data$`30-year-old human stage`)
@@ -31,16 +37,16 @@ anchors <- FindIntegrationAnchors(object.list = pre_integration,
                                   reduction = "cca",
                                   k.anchor = 20)
 
-ccat_sct <- IntegrateData(anchorset = anchors,
-                          normalization.method = "SCT",
-                          dims = 1:30)
-ccat_sct <- RunPCA(ccat_sct)
+cca_sct <- IntegrateData(anchorset = anchors,
+                         normalization.method = "SCT",
+                         dims = 1:30)
+cca_sct <- RunPCA(cca_sct)
 resolution_range <- seq(from = 0, to = 1, by = 0.1)
-ccat_sct <- FindNeighbors(ccat_sct, dims = 1:30)
-ccat_sct  <- RunUMAP(ccat_sct, reduction = "pca", dims = 1:30)
-ccat_sct <- FindClusters(ccat_sct, resolution = resolution_range)
+cca_sct <- FindNeighbors(cca_sct, dims = 1:30)
+cca_sct  <- RunUMAP(cca_sct, reduction = "pca", dims = 1:30)
+cca_sct <- FindClusters(cca_sct, resolution = resolution_range)
 
 # Adjust the contrast in the plot
-dim_plot <- DimPlot(object = ccat_sct, reduction = "umap")
+dim_plot <- DimPlot(object = cca_sct, reduction = "umap")
 
-ggsave(filename = "/plots/cca_umap_plot.png", plot = dim_plot)
+ggsave(filename = glue("{output_path}/cca_umap_plot.png"), plot = dim_plot)

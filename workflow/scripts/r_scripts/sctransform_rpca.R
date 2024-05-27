@@ -5,9 +5,14 @@ library(sctransform)
 library(glmGamPoi)
 library(ggplot2)
 
-path <- "/data/immune.rds"
-data <- readRDS(path)
-data <- SplitObject(data, split.by = "development_stage")
+args <- commandArgs(trailingOnly = TRUE)
+
+input_path <- args[[1]]
+output_path <- args[[2]]
+dataset_key <- args[[3]]
+
+data <- readRDS(input_path)
+data <- SplitObject(data, split.by = dataset_key)
 
 data <- list(data$`31-year-old human stage`,
              data$`30-year-old human stage`)
@@ -43,5 +48,4 @@ rpca_sct <- FindClusters(rpca_sct, resolution = resolution_range)
 # Adjust the contrast in the plot
 dim_plot <- DimPlot(object = rpca_sct, reduction = "umap")
 
-ggsave(filename = "/plots/rpca_umap_plot.png", plot = dim_plot)
-
+ggsave(filename = glue("{output_path}/rpca_umap_plot.png"), plot = dim_plot)
