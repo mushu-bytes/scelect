@@ -2,14 +2,22 @@
 # Please follow the best practices: 
 # https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html,
 # in particular regarding the standardized folder structure mentioned there. 
-# sudo docker run -v /mnt/shared/nationwide/cell_type_datasets/immune.rds:/data/immune.rds -v /mnt/shared/users/damon/Workspaces/scelect/workflow/scripts:/scripts seurat/container:latest /scripts/r_scripts/sctransform_rpca.R
-#
+import os
+
+PWD = os.getcwd()
+INPUT_PATH = "/mnt/shared/nationwide/cell_type_datasets"
+
 rule all:
 	input:
-		"/mnt/shared/nationwide/cell_type_datasets/immune.rds"
+		f"{INPUT_PATH}/immune.rds"
 	output:
-		"/mnt/shared/users/damon/Workspaces/scelect/workflow/plots/umap_plot.png"
+		f"{PWD}/plots/umap_plot.png"
 	container:
-		"seurat/container"
+		"seurat/container:latest"
 	shell:
-		"sudo docker run -v /mnt/shared/nationwide/cell_type_datasets/immune.rds:/data/immune.rds -v /mnt/shared/users/damon/Workspaces/scelect/workflow/scripts:/scripts -v /mnt/shared/users/damon/Workspaces/scelect/workflow/plots:/plots seurat/container:latest /scripts/r_scripts/sctransform_rpca.R" 
+		"docker run "
+		"--user $(id -u):$(id -g) "
+		f"-v {INPUT_PATH}/immune.rds:/data/immune.rds "
+		f"-v {PWD}/scripts:/scripts "
+		f"-v {PWD}/plots:/plots seurat/container:latest "
+		"/scripts/r_scripts/sctransform_rpca.R" 
