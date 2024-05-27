@@ -2,3 +2,4 @@
 # Please follow the best practices: 
 # https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html,
 # in particular regarding the standardized folder structure mentioned there. 
+# sudo docker run -v /mnt/shared/nationwide/cell_type_datasets/immune.rds:/data/immune.rds -v /mnt/shared/users/damon/Workspaces/scelect/workflow/scripts:/scripts seurat/container:latest /scripts/r_scripts/sctransform_rpca.R
