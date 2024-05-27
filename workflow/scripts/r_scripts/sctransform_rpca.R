@@ -34,4 +34,6 @@ combined.sct <- FindClusters(combined.sct, resolution = resolution.range)
 #combined.sct <- FindClusters(combined.sct, resolution = 0.3)
 
 # Adjust the contrast in the plot
-DimPlot(object = combined.sct, reduction = "umap")
+dim_plot <- DimPlot(object = combined.sct, reduction = "umap")
+
+ggsave(filename = "/plots/umap_plot.png", plot = dim_plot)
