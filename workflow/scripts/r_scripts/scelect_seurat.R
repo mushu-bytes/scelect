@@ -61,7 +61,7 @@ for (x in reduction) {
     dim_plot <- DimPlot(object = integrated, reduction = "umap")
 
     # make sure to add string interpolcation here
-    ggsave(filename = glue("./{x}_umap_plot.png"), plot = dim_plot)
+    ggsave(filename = glue("{output_path}/{x}_umap_plot.png"), plot = dim_plot)
 }
 
 compute_silhouette_avg <- function(integration) {
