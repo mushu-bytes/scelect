@@ -28,20 +28,19 @@ anchors <- FindIntegrationAnchors(object.list = pre_integration,
                                   normalization.method = "SCT",
                                   anchor.features = features,
                                   dims = 1:30,
-                                  reduction = "rpca",
+                                  reduction = "cca",
                                   k.anchor = 20)
 
-rpca_sct <- IntegrateData(anchorset = anchors,
+ccat_sct <- IntegrateData(anchorset = anchors,
                           normalization.method = "SCT",
                           dims = 1:30)
-rpca_sct <- RunPCA(rpca_sct)
+ccat_sct <- RunPCA(ccat_sct)
 resolution_range <- seq(from = 0, to = 1, by = 0.1)
-rpca_sct <- FindNeighbors(rpca_sct, dims = 1:30)
-rpca_sct  <- RunUMAP(rpca_sct, reduction = "pca", dims = 1:30)
-rpca_sct <- FindClusters(rpca_sct, resolution = resolution_range)
+ccat_sct <- FindNeighbors(ccat_sct, dims = 1:30)
+ccat_sct  <- RunUMAP(ccat_sct, reduction = "pca", dims = 1:30)
+ccat_sct <- FindClusters(ccat_sct, resolution = resolution_range)
 
 # Adjust the contrast in the plot
-dim_plot <- DimPlot(object = rpca_sct, reduction = "umap")
+dim_plot <- DimPlot(object = ccat_sct, reduction = "umap")
 
-ggsave(filename = "/plots/rpca_umap_plot.png", plot = dim_plot)
-
+ggsave(filename = "/plots/cca_umap_plot.png", plot = dim_plot)
