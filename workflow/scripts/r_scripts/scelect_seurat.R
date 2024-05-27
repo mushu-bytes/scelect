@@ -26,6 +26,7 @@ normalized_data <- lapply(X = data, FUN = SCTransform, method = "glmGamPoi")
 reduction <- list("rpca", "cca")
 integrations <- list()
 
+# do the integrations
 for (x in reduction) {
     features <- SelectIntegrationFeatures(object.list = normalized_data,
                                           nfeatures = 3000)
@@ -73,6 +74,7 @@ compute_silhouette_avg <- function(integration) {
   )
 }
 
+# compute silhouette scores and visualize
 results1 <- compute_silhouette_avg(integrations[[1]])
 results2 <- compute_silhouette_avg(integrations[[2]])
 avg_sil_score1 <- mean(results1$silhouette_width)
@@ -95,6 +97,7 @@ p <- ggplot(combined_sil_scores, aes(x = cluster, y = silhouette_width, fill = d
 
 ggsave(glue("{output_path}/seurat_report.png"), plot = p, width = 10, height = 6)
 
+# write to disk
 if (avg_sil_score1 > avg_sil_score2) {
   SaveH5Seurat(integrations[[1]], glue("{output_path}/seurat_integration.h5Seurat"), overwrite=TRUE)
 }
