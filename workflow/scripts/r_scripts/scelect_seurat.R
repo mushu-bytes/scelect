@@ -18,9 +18,6 @@ dataset_key <- args[[3]]
   
 data <- readRDS(input_path)
 data <- SplitObject(data, split.by = dataset_key)
-
-data <- list(data$`31-year-old human stage`,
-             data$`30-year-old human stage`)
 normalized_data <- lapply(X = data, FUN = SCTransform, method = "glmGamPoi")
 
 reduction <- list("rpca", "cca")
@@ -58,7 +55,7 @@ for (x in reduction) {
     integrations <- append(integrations, integrated)
 
     # Adjust the contrast in the plot
-    dim_plot <- DimPlot(object = integrated, reduction = "umap")
+    dim_plot <- DimPlot(object = integrated, reduction = "umap", group.by = dataset_key)
 
     # make sure to add string interpolcation here
     ggsave(filename = glue("{output_path}/{x}_umap_plot.png"), plot = dim_plot)
