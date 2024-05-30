@@ -1,9 +1,8 @@
 results/**
 resources/**
-./workflow/results/*
+workflow/results/*
 logs/**
 .snakemake
 .snakemake/**
 .ipynb_checkpoints
-.cpython-310.py
-./workflow/scripts/python_scripts/scprocessing/__pychache__/*
+workflow/scripts/python_scripts/scprocessing/__pycache__/*
