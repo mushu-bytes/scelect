@@ -5,7 +5,7 @@
 import os
 
 PWD = os.getcwd()
-INPUT_PATH = "/mnt/shared/nationwide/cell_type_datasets"
+INPUT_PATH = "/home/user/Workspace"
 
 rule seurat:
 	input:

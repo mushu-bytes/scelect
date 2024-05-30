@@ -27,10 +27,11 @@ def splitAD(dataset: AnnData, key: str) -> List[AnnData]:
 if __name__ == "__main__":
     # arguments would be input file, output file, key
     input_path, output_path, dataset_key = sys.argv[1], sys.argv[2], sys.argv[3]
-    immune = sc.read_h5ad(f"{input_path}/immune.h5ad")
+    immune = sc.read_h5ad(f"{input_path}/human_brca_immune.h5ad")
     immune.var_names_make_unique()
     immune.obs_names_make_unique()
-    immune_data = splitAD(immune, dataset_key)
+    del immune.obsm["X_diffmap"] # if available throws off script
+    immune_data = splitAD(immune, dataset_key)[0:2]
     select_immune = SelectPipeline(normalization=["seurat", "zheng17"],\
                                     integration=["harmony", "scanorama", "merge"],\
                                     metrics=["jaccard", "ari", "nmi"],
@@ -59,7 +60,7 @@ if __name__ == "__main__":
     alt.data_transformers.enable("vegafusion")
     high_contrast_colors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231']
 
-    umap_chart = alt.Chart(filtered_df).mark_point(size=1.5).encode(
+    umap_chart = alt.Chart(final_df).mark_point(size=1.5).encode(
         x="UMAP1",
         y="UMAP2",
         color=alt.Color(dataset_key).scale(range=high_contrast_colors)
