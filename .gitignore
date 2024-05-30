@@ -5,3 +5,4 @@ logs/**
 .snakemake
 .snakemake/**
 .ipynb_checkpoints
+.cpython-310.py
