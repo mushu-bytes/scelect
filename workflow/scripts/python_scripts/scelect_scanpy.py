@@ -10,7 +10,6 @@ from scprocessing.SelectPipeline import SelectPipeline
 from utils import splitAD, read_single_cell_data
 
 
-
 if __name__ == "__main__":
     # arguments would be input file, output file, key
     input_path, output_path, dataset_key = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -28,6 +27,7 @@ if __name__ == "__main__":
     immune_res, report_immune, pipeline_immune = select_immune.search(immune_data, key_metric="ari")
     immune_res.write(f"{output_path}/scanpy_integration.h5ad")
 
+    # TODO: Move visualization to separate file
     # post processing for visualization, probably move this into a different file
     final_df = []
     for key, cluster in select_immune.clusters.items():
