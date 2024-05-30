@@ -6,3 +6,4 @@ logs/**
 .snakemake/**
 .ipynb_checkpoints
 .cpython-310.py
+./workflow/scripts/python_scripts/scprocessing/__pychache__/*
