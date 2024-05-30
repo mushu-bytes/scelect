@@ -7,27 +7,14 @@ import altair as alt
 from anndata import AnnData
 from typing import List
 from scprocessing.SelectPipeline import SelectPipeline
+from utils import splitAD, read_single_cell_data
 
-def splitAD(dataset: AnnData, key: str) -> List[AnnData]:
-    """
-    Parameters:
-        dataset: AnnData object
-        key: observation field to split the dataset into
-    Return:
-        List of anndata split by key
-    """
-    unique_values = dataset.obs[key].unique()
-    subsets = []
-    
-    # Iterate over unique values and create subsets
-    for value in unique_values:
-        subsets.append(dataset[dataset.obs[key] == value].copy())
-    return subsets
+
 
 if __name__ == "__main__":
     # arguments would be input file, output file, key
     input_path, output_path, dataset_key = sys.argv[1], sys.argv[2], sys.argv[3]
-    immune = sc.read_h5ad(f"{input_path}/human_brca_immune.h5ad")
+    immune = read_single_cell_data(f"{input_path}/human_brca_immune.h5ad")
     immune.var_names_make_unique()
     immune.obs_names_make_unique()
     del immune.obsm["X_diffmap"] # if available throws off script
