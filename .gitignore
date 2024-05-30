@@ -5,4 +5,4 @@ logs/**
 .snakemake
 .snakemake/**
 .ipynb_checkpoints
-workflow/scripts/python_scripts/scprocessing/__pycache__/*
+__pycache__
