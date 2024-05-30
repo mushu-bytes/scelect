@@ -15,9 +15,39 @@ args <- commandArgs(trailingOnly = TRUE)
 input_path <- args[[1]]
 output_path <- args[[2]]
 dataset_key <- args[[3]]
+
+read_single_cell_data <- function(filepath) {
+  tryCatch({
+    # Try to read as 10X Genomics HDF5
+    return(Read10X_h5(filepath))
+  }, error = function(e) {
+    # Handle error silently and try the next format
+  })
   
-data <- readRDS(input_path)
-data <- SplitObject(data, split.by = dataset_key)
+  tryCatch({
+    # Try to read as h5seurat
+    return(LoadH5Seurat(filepath))
+  }, error = function(e) {
+  })
+  
+  tryCatch({
+    # Try to read as rds
+    return(readRDS(filepath))
+  }, error = function(e) {
+  })
+  
+  tryCatch({
+    # Try to read as H5AD
+    Convert(filepath, dest = glue("tmp/data.h5seurat"), overwrite = TRUE)
+    return(LoadH5Seurat("tmp/data.h5seurat"))
+  }, error = function(e) {
+  })
+  
+  stop("Unsupported file format or file could not be read")
+}
+  
+data <- read_single_cell_data(input_path)
+data <- SplitObject(data, split.by = dataset_key)[1:5]
 normalized_data <- lapply(X = data, FUN = SCTransform, method = "glmGamPoi")
 
 reduction <- list("rpca", "cca")
