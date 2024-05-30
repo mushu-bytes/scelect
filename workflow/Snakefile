@@ -5,7 +5,21 @@
 import os
 
 PWD = os.getcwd()
-INPUT_PATH = "/home/user/Workspace"
+INPUT_PATH = "/mnt/shared/nationwide/cell_type_datasets"
+
+rule all:
+	input:
+		f"{PWD}/results/scanpy_integration.h5ad",
+		f"{PWD}/results/seurat_integration.h5Seurat"
+
+rule scanpy:
+	input:
+		f"{INPUT_PATH}/human_brca_immune.h5ad"
+	output:
+		f"{PWD}/results/scanpy_integration.h5ad",
+		f"{PWD}/results/scanpy_report.png"
+	shell:
+		"python scripts/python_scripts/scelect_scanpy.py /mnt/shared/nationwide/cell_type_datasets /home/user/Workspace/scelect/workflow/results development_stage"
 
 rule seurat:
 	input:
