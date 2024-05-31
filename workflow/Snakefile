@@ -18,8 +18,19 @@ rule scanpy:
 	output:
 		f"{PWD}/results/scanpy_integration.h5ad",
 		f"{PWD}/results/scanpy_report.png"
+	container:
+		"scanpy/container:latest"
 	shell:
-		"python scripts/python_scripts/scelect_scanpy.py /mnt/shared/nationwide/cell_type_datasets /home/user/Workspace/scelect/workflow/results development_stage"
+		"docker run "
+		"--user $(id -u):$(id -g) "
+		f"-v {INPUT_PATH}/human_brca_immune.h5ad:/data/human_brca_immune.h5ad "
+		f"-v {PWD}/scripts:/scripts "
+		f"-v {PWD}/results:/results "
+		"scanpy/container:latest "
+		"scripts/python_scripts/scelect_scanpy.py "
+		"/data/human_brca_immune.h5ad "
+		"/results "
+		"development_stage"
 
 rule seurat:
 	input:
