@@ -6,6 +6,8 @@ import os
 
 PWD = os.getcwd()
 INPUT_PATH = "/mnt/shared/nationwide/cell_type_datasets"
+SCANPY_DATA = "human_brca_immune.h5ad"
+SEURAT_DATA = "immune.rds"
 
 rule all:
 	input:
@@ -14,7 +16,7 @@ rule all:
 
 rule scanpy:
 	input:
-		f"{INPUT_PATH}/human_brca_immune.h5ad"
+		f"{INPUT_PATH}/{SCANPY_DATA}"
 	output:
 		f"{PWD}/results/scanpy_integration.h5ad",
 		f"{PWD}/results/scanpy_report.png"
@@ -23,18 +25,18 @@ rule scanpy:
 	shell:
 		"docker run "
 		"--user $(id -u):$(id -g) "
-		f"-v {INPUT_PATH}/human_brca_immune.h5ad:/data/human_brca_immune.h5ad "
+		f"-v {INPUT_PATH}/{SCANPY_DATA}:/data/{SCANPY_DATA} "
 		f"-v {PWD}/scripts:/scripts "
 		f"-v {PWD}/results:/results "
 		"scanpy/container:latest "
 		"scripts/python_scripts/scelect_scanpy.py "
-		"/data/human_brca_immune.h5ad "
+		f"/data/{SCANPY_DATA} "
 		"/results "
 		"development_stage"
 
 rule seurat:
 	input:
-		f"{INPUT_PATH}/immune.rds"
+		f"{INPUT_PATH}/{SEURAT_DATA}"
 	output:
 		f"{PWD}/results/seurat_integration.h5Seurat",
 		f"{PWD}/results/seurat_report.png",
@@ -45,10 +47,10 @@ rule seurat:
 	shell:
 		"docker run "
 		"--user $(id -u):$(id -g) "
-		f"-v {INPUT_PATH}/immune.rds:/data/immune.rds "
+		f"-v {INPUT_PATH}/{SEURAT_DATA}:/data/{SEURAT_DATA} "
 		f"-v {PWD}/scripts:/scripts "
 		f"-v {PWD}/results:/results seurat/container:latest "
 		"/scripts/r_scripts/scelect_seurat.R "
-		f"/data/immune.rds " 
+		f"/data/{SEURAT_DATA} " 
 		f"/results "
 		"development_stage"
