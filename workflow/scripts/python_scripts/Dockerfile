@@ -5,6 +5,7 @@ RUN pip install scib
 RUN conda install --solver=classic -c conda-forge python-annoy
 RUN pip install scanorama
 RUN pip install harmonypy
+RUN pip install matplotlib
 # env variable required for scanpy to run
 ENV NUMBA_CACHE_DIR=tmp/
 ENV MPLCONFIGDIR=tmp/
