@@ -1,21 +1,22 @@
-# Snakemake workflow: `<name>`
+# Scelect
 
-[![Snakemake](https://img.shields.io/badge/snakemake-≥6.3.0-brightgreen.svg)](https://snakemake.github.io)
-[![GitHub actions status](https://github.com/<owner>/<repo>/workflows/Tests/badge.svg?branch=main)](https://github.com/<owner>/<repo>/actions?query=branch%3Amain+workflow%3ATests)
+This repository contains a snakemake pipeline that implements a grid search of single cell integration and normalization methods that have been prototyped in this repository: https://github.com/mushu-bytes/scRNAseq-benchmarking?tab=readme-ov-file. 
+
+### Dependencies
+
+In order to use this snakemake pipeline, please install snakemake through pip or conda. Installation instructions can be found here: https://snakemake.readthedocs.io/en/stable/getting_started/installation.html
+
+In addition, this snakemake runs two jobs in parallel -- integration and normalization methods implemented in Seurat, and integration and normalization methods hosted in Scanpy. In order to run the two jobs, docker containers must be built from Dockerfiles at workflows/scripts/python_scripts and workflows/scripts/r_scripts, which are used to containerize the Python and R environments.
+
+### Execution
+
+After snakemake and the Docker images have been built, the snakefile within workflows/ can be used to run the snakemake pipeline via snakemake --cores=1. Make sure to edit the snakemake file to fit your environment, such as adding specific filepaths to the data 
+
+### Usage and Developer Notes
+
+Given that this pipeline is running jobs through both Seurat and Scanpy libraries, interoperatability between datasets is tricky. So far, only .h5ad and .h5 files from 10x genomics are supported when reading running Scanpy normalization and Integration. On the other hand, 10x formated h5 files, .rds files, .h5Seurat files, and .h5ad files are available for usage through our R scripts.
+
+Although our team aimed to synchronize outputs from jobs run in R and jobs run in Python, the outputs are not standardized. As a result, it is not trivial to see an apples-apples comparison from a singular reports, but we aimed to dump as much information relevant to our metrics and evaluation as outputs.
 
 
-A Snakemake workflow for `<description>`
 
-
-## Usage
-
-The usage of this workflow is described in the [Snakemake Workflow Catalog](https://snakemake.github.io/snakemake-workflow-catalog/?usage=<owner>%2F<repo>).
-
-If you use this workflow in a paper, don't forget to give credits to the authors by citing the URL of this (original) <repo>sitory and its DOI (see above).
-
-# TODO
-
-* Replace `<owner>` and `<repo>` everywhere in the template (also under .github/workflows) with the correct `<repo>` name and owning user or organization.
-* Replace `<name>` with the workflow name (can be the same as `<repo>`).
-* Replace `<description>` with a description of what the workflow does.
-* The workflow will occur in the snakemake-workflow-catalog once it has been made public. Then the link under "Usage" will point to the usage instructions if `<owner>` and `<repo>` were correctly set.
